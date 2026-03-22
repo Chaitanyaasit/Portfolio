@@ -1,8 +1,15 @@
-
 import { useState } from "react";
-import emailjs from "@emailjs/browser";
+import emailjs, { EmailJSResponseStatus } from "@emailjs/browser";
 import Alert from "../components/Alert";
 import { Particles } from "../components/Particles";
+
+const EMAILJS_SERVICE_ID =
+  import.meta.env.VITE_EMAILJS_SERVICE_ID || "service_grluv43";
+const EMAILJS_TEMPLATE_ID =
+  import.meta.env.VITE_EMAILJS_TEMPLATE_ID || "template_fsjed4l";
+const EMAILJS_PUBLIC_KEY =
+  import.meta.env.VITE_EMAILJS_PUBLIC_KEY || "pn-axWPE3Nty9CNetzIr";
+
 const Contact = () => {
   const [formData, setFormData] = useState({
     name: "",
@@ -24,64 +31,58 @@ const Contact = () => {
       setShowAlert(false);
     }, 5000);
   };
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   setIsLoading(true);
-
-  //   try {
-  //     console.log("From submitted:", formData);
-  //     await emailjs.send(
-  //       "service_grluv43",
-  //       "template_fsjed4l",
-  //       {
-  //         from_name: formData.name,
-  //         //to_name: "Chaitanya",
-  //         from_email: formData.email,
-  //         //to_email: "chaitanyaasit@gmail.com",
-  //         message: formData.message,
-  //       },
-  //       "pn-axWPE3Nty9CNetzIr"
-  //     );
-  //     setIsLoading(false);
-  //     setFormData({ name: "", email: "", message: "" });
-  //     showAlertMessage("success", "You message has been sent!");
-  //   } catch (error) {
-  //     setIsLoading(false);
-  //     console.log(error);
-  //     showAlertMessage("danger", "Somthing went wrong!");
-  //   }
-  // };
-
-
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  setIsLoading(true);
+    e.preventDefault();
 
-  try {
-    await emailjs.send(
-      "service_grluv43",
-      "template_fsjed4l",
-      {
-        name: formData.name,
-        email: formData.email,
-        message: formData.message,
-      },
-      "pn-axWPE3Nty9CNetzIr"
-    );
+    if (!EMAILJS_SERVICE_ID || !EMAILJS_TEMPLATE_ID || !EMAILJS_PUBLIC_KEY) {
+      showAlertMessage(
+        "danger",
+        "Contact form is not configured yet. Add your EmailJS keys first."
+      );
+      return;
+    }
 
-    setFormData({ name: "", email: "", message: "" });
-    showAlertMessage("success", "Your message has been sent!");
-  } catch (error) {
-    console.error(error);
-    showAlertMessage("danger", "Something went wrong!");
-  } finally {
-    setIsLoading(false);
-  }
-};
+    setIsLoading(true);
 
-  
+    try {
+      await emailjs.send(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        {
+          name: formData.name,
+          from_name: formData.name,
+          email: formData.email,
+          from_email: formData.email,
+          reply_to: formData.email,
+          message: formData.message,
+        },
+        {
+          publicKey: EMAILJS_PUBLIC_KEY,
+        }
+      );
+
+      setFormData({ name: "", email: "", message: "" });
+      showAlertMessage("success", "Your message has been sent!");
+    } catch (error) {
+      console.error("EmailJS send failed:", error);
+      const errorMessage =
+        error instanceof EmailJSResponseStatus
+          ? `EmailJS error ${error.status}: ${error.text}`
+          : error?.message || "Unknown error";
+      showAlertMessage(
+        "danger",
+        `Message could not be sent. ${errorMessage}`
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
-    <section className="relative flex items-center c-space section-spacing">
+    <section
+      id="contact"
+      className="relative flex items-center c-space section-spacing scroll-mt-24"
+    >
       <Particles
         className="absolute inset-0 -z-50"
         quantity={100}

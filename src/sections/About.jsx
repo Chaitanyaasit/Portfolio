@@ -3,17 +3,18 @@ import Card from "../components/Card";
 import { Globe } from "../components/globe";
 import CopyEmailButton from "../components/CopyEmailButton";
 import { Frameworks } from "../components/Frameworks";
+import { assetUrl } from "../utils/assets";
 
 const About = () => {
   const grid2Container = useRef();
   return (
-    <section className="c-space section-spacing" id="about">
+    <section className="c-space section-spacing scroll-mt-24" id="about">
       <h2 className="text-heading">About Me</h2>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-6 md:auto-rows-[18rem] mt-12">
         {/* Grid 1 */}
         <div className="flex items-end grid-default-color grid-1">
           <img
-            src="assets/coding-pov.png"
+            src={assetUrl("assets/coding-pov.png")}
             className="absolute scale-[1.75] -right-[5rem] -top-[1rem] md:scale-[3] md:left-50 md:inset-y-10 lg:scale-[2.5]"
           />
           <div className="z-10">
@@ -66,12 +67,12 @@ const About = () => {
 
             <Card
               style={{ rotate: "-45deg", top: "70%", left: "25%" }}
-              image="assets/logos/dotnet-pink.png"
+              image={assetUrl("assets/logos/dotnet-pink.png")}
               containerRef={grid2Container}
             />
             <Card
               style={{ rotate: "-45deg", top: "5%", left: "10%" }}
-              image="assets/logos/blazor-pink.png"
+              image={assetUrl("assets/logos/blazor-pink.png")}
               containerRef={grid2Container}
             />
           </div>
