@@ -4,16 +4,12 @@ export function Frameworks() {
   const skills = [
     "auth0",
     "MS SQL Server",
-  
-
     "css3",
     "github",
     "git",
     "html5",
-    "javascript",
-  
+    "javascript",  
     "react",
-   
     "tailwindcss",
     "vitejs",
   
